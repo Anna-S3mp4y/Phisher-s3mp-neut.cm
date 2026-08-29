@@ -117,9 +117,6 @@ options:
 4. Send the generated link to victim
 5. Wait for victim login. As soon as he/she logs in, credentials will be captured
 
-<h1 align="center">Example</h1>
-
-![phishrs3mp-neut](https://raw.githubusercontent.com/Anna-S3mp4y/Phisher-s3mp-neut.cm/main/files/phishrs3mp-neut.gif)
 
 ## Solution of common issues
  - Some secured browsers like Firefox can warn for '@' prefixed links. Use pure links or custom link to avoid it.
