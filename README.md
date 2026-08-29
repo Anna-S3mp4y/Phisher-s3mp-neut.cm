@@ -32,7 +32,7 @@ Proyecto educativo (hecho con un amigo) para mostrar cómo funciona el phishing 
  - ```python3 phishrs3mp-neut.py```
 
 #### Or, Clone
-https://github.com/Anna-S3mp4y/Phisher-s3mp-neut.cm/blob/main/README.md
+https://github.com/Anna-S3mp4y/Phisher-s3mp-neut.cm
 
 ### Pip
  - `pip3 install phishrs3mp-neut` [For Termux]
