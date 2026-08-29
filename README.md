@@ -1,22 +1,5 @@
 <h1 align="center">phishrs3mp-neut</h1>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Version-1.1-green?style=for-the-badge">
-  <img src="https://img.shields.io/github/stars/KasRoudra/MaxPhisher?style=for-the-badge&color=orange">
-  <img src="https://img.shields.io/github/forks/KasRoudra/MaxPhisher?color=cyan&style=for-the-badge&color=purple">
-  <img src="https://img.shields.io/github/watchers/KasRoudra/MaxPhisher?color=cyan&style=for-the-badge&color=purple">
-  <img src="https://img.shields.io/github/issues/KasRoudra/MaxPhisher?color=red&style=for-the-badge">
-  <img src="https://img.shields.io/github/license/KasRoudra/MaxPhisher?style=for-the-badge&color=blue">
-  <img src="https://hits.dwyl.com/KasRoudra/MaxPhisher.svg" width="140" height="28">
-<br>
-<br>
-  <img src="https://img.shields.io/badge/Author-KasRoudra-purple?style=flat-square">
-  <img src="https://img.shields.io/badge/Open%20Source-Yes-cyan?style=flat-square">
-  <img src="https://img.shields.io/badge/Made%20in-Bangladesh-green?colorA=%23ff0000&colorB=%23017e40&style=flat-square">
-  <img src="https://img.shields.io/badge/Written%20In-Python-blue?style=flat-square">
-</p>
-
-
 ### [√] Description :
 
 ***A python phishing script for login phishing, image phishing, video phishing and many more***
@@ -58,10 +41,6 @@ wget https://raw.githubusercontent.com/KasRoudra/MaxPhisher/main/maxphisher.py &
  - `sudo pip3 install phishrs3mp-neut` [For Linux]
  - `phishrs3mp-neut`
 
-### Docker
-
- - `sudo docker pull kasroudra/maxphisher`
- - `sudo docker run --rm -it kasroudra/maxphisher`
 
 
 ### Support
@@ -182,22 +161,4 @@ If not found, php, ssh and python modoules will be installed on first run
 ####  Want to show support? Just spread the word and smash the star button
 ###### Donate BTC: ***3Lx8ikQQgZZpmFJzHDBuQHXzLXMeWMcZF3***
 
-## Credits:
-[PyPhisher](https://github.com/KasRoudra/PyPhisher)
-[CamHacker](https://github.com/KasRoudra/CamHacker)
-[VidPhisher](https://github.com/KasRoudra/VidPhisher)
-[IP-Tracker](https://github.com/KasRoudra/IP-Tracker)
-[Storm-Breaker](https://github.com/ultrasecurity/Storm-Breaker)
-[Seeker](https://github.com/thewhiteh4t/seeker)
 
-## [~] Find Me on :
-
-- [![Github](https://img.shields.io/badge/Github-KasRoudra-green?style=for-the-badge&logo=github)](https://github.com/KasRoudra)
-
-- [![Gmail](https://img.shields.io/badge/Gmail-KasRoudra-green?style=for-the-badge&logo=gmail)](mailto:kasroudrakrd@gmail.com)
-
-- [![Facebook](https://img.shields.io/badge/Facebook-KasRoudra-green?style=for-the-badge&logo=facebook)](https://facebook.com/KasRoudra)
-
-- [![Messenger](https://img.shields.io/badge/Messenger-KasRoudra-green?style=for-the-badge&logo=messenger)](https://m.me/KasRoudra)
-
-- [![Telegram](https://img.shields.io/badge/Telegram-KasRoudra-indigo?style=for-the-badge&logo=telegram)](https://t.me/KasRoudra)
