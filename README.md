@@ -1,4 +1,4 @@
-<h1 align="center">phishrs3mp-neut 💀</h1>
+<h1 align="center">phishrs3mp-neut💀</h1>
 
 <p align="center">
   <b>v2.0</b> · by <b>s3mp4y.cm (Anna-S3mp4y)</b>
