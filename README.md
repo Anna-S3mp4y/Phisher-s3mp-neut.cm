@@ -30,9 +30,9 @@
 ##### Run the tool
  - ```python3 phishrs3mp-neut.py```
 
-#### Or, directly run
+#### Or, Clone
 ```
-wget https://raw.githubusercontent.com/KasRoudra/MaxPhisher/main/maxphisher.py && python3 maxphisher.py
+https://github.com/Anna-S3mp4y/Phisher-s3mp-neut.cm/blob/main/README.md
 
 ```
 
