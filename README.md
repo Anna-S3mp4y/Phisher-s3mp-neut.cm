@@ -133,6 +133,5 @@ La Mona Lisa: nadie sabe si es la verdadera o una copia. Así es el phishing: un
 
 ### [*] Support
 #### ¿Te gusta? Cuéntalo y dale una estrella
-###### Donate BTC: ***3Lx8ikQQgZZpmFJzHDBuQHXzLXMeWMcZF3***
-Notas: cambié el gif de ejemplo a tu repo (files/phishrs3mp-neut.gif — copia ahí tu phishrs3mp-neut.gif), añadí la sección Licencia v2.0 con tu nombre (y crédito al original de KasRoudra) y dejé el disclaimer educativo. Para GitHub añade además un LICENSE (MIT) y .gitignore con files/email.json y ~/.tunneler/.
+###### Donate ftf: Con su estrella basta
 
