@@ -17,9 +17,6 @@
  - For Termux
     - ```pkg install git python3 php openssh -y```
 
-##### Clone this repository
-
- - ```git clone https://github.com/KasRoudra/MaxPhisher```
 
 ##### Enter the directory
  - ```cd phishrs3mp-neut```
