@@ -40,7 +40,7 @@ https://github.com/Anna-S3mp4y/Phisher-s3mp-neut.cm
  - `phishrs3mp-neut`
 
 ### [√] License
-***MIT License · phishrs3mp-neut v2.0 · © 2026 s3mp4y.cm (Anna-S3mp4y) · Original: KasRoudra/MaxPhisher (MIT)***
+***MIT License · phishrs3mp-neut v2.0 · © 2026 s3mp4y.cm (Anna-S3mp4y) ***
 
 ### Support
 
